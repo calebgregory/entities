@@ -1,0 +1,30 @@
+{
+  "name": "entities",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/calebgregory/entities.git"
+  },
+  "author": "caleb gregory <calebgregory@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/calebgregory/entities/issues"
+  },
+  "homepage": "https://github.com/calebgregory/entities#readme",
+  "devDependencies": {
+    "bower": "^1.5.2"
+  },
+  "dependencies": {
+    "babel": "^5.8.23",
+    "errorhandler": "^1.4.2",
+    "express": "^4.13.3",
+    "jade": "^1.11.0",
+    "morgan": "^1.6.1",
+    "node-sass-middleware": "^0.9.6"
+  }
+}

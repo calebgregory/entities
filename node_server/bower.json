@@ -1,0 +1,20 @@
+{
+  "name": "entities",
+  "version": "1.0.0",
+  "homepage": "https://github.com/calebgregory/entities",
+  "authors": [
+    "calebgregory <calebgregory@gmail.com>"
+  ],
+  "main": "index.js",
+  "moduleType": [
+    "node"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
