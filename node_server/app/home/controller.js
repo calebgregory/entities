@@ -1,4 +1,5 @@
 'use strict';
+var parser = require('./parser').parse;
 
 export function index(req,res) {
   res.render('home/index',
@@ -6,5 +7,8 @@ export function index(req,res) {
 };
 
 export function externalWebpage(req,res) {
-  res.send(req.query);
+  var externalWebpage = req.query;
+  parser(externalWebpage.url, data => {
+    res.send(data);
+  })
 }
