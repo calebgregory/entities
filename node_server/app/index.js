@@ -1,8 +1,9 @@
 'use strict';
 
 var express = require('express')
+  , less = require('less-middleware')
   , morgan  = require('morgan')
-  , sass    = require('node-sass-middleware');
+  , path    = require('path');
 
 var routes  = require('./routes');
 
