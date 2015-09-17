@@ -14,18 +14,13 @@ app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname);
 app.set('view engine', 'jade');
 
+app.use(less(path.join(process.cwd(),'node_server/www')));
+
 app.locals.title = 'Entities';
 
 app.use(morgan('dev'));
-app.use(express.static('www'));
-app.use(sass({
-  dest        : 'www/styles',
-  outputStyle : 'compressed',
-  prefix      : '/styles',
-  sourceMap   : app.get('env') === 'production' ? 'false' : true,
-  src         : 'www/styles'
-}));
 
+app.use(express.static((path.join(process.cwd(),'node_server/www'))));
 app.use('/', routes);
 
 require('../lib/errorHandler/');
