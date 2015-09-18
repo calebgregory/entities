@@ -1,7 +1,7 @@
 'use strict';
 
 var parser = require('./parser').parse;
-var nltkClient = require('./nltk-client').client;
+var messenger = require('./messenger');
 
 export function index(req,res) {
   res.render('home/index',
@@ -13,9 +13,12 @@ export function externalWebpage(req,res) {
 
   parser(externalWebpage.url, (err, text) => {
     if(err) throw err;
-    nltkClient(text, (err, entities) => {
+    messenger.send(text, err => {
       if(err) throw err;
-      res.send(entities);
+      messenger.receive((err, entities) => {
+        if(err) throw err;
+        res.send(entities);
+      });
     });
   });
 }
