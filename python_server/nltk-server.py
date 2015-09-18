@@ -8,10 +8,14 @@ channel = connection.channel()
 
 channel.queue_declare(queue='nltk_queue')
 
+def tokens(sentence):
+    tokens = nltk.word_tokenize(sentence)
+    return tokens
+
 def on_request(ch, method, props, body):
     print " [.] Received body: %s" % (body[0:10] + body[-10:])
 
-    response = ['hello', 'back']
+    response = tokens(body)
 
     ch.basic_publish(exchange='',
             routing_key=props.reply_to,
