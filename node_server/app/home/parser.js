@@ -20,11 +20,15 @@ export function parse(url, cb) {
       else if(name === 'script' || name === 'style') inBody = true;
     },
     onend: () => {
-      cb(data);
+      cb(null, JSON.stringify(data));
     }
   }, {decodeEntities: true});
 
   request(url, (err,response,body) => {
+    if(err) {
+      cb(err)
+      throw err;
+    }
 
     parser.write(body);
     parser.end();
