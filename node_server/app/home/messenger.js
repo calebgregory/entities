@@ -28,7 +28,7 @@ export function receive(cb) {
       console.log(' [*] Waiting for messages in %s. To exit, press CTRL+C', q);
       ch.consume(q, msg => {
         console.log(' [x] Received %s', `${msg.content.toString().slice(0,20)}...`)
-        cb(null, msg);
+        cb(null, msg.content.toString());
       }, {noAck: true});
     });
   });
