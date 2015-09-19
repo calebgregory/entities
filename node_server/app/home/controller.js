@@ -13,12 +13,10 @@ export function externalWebpage(req,res) {
 
   parser(externalWebpage.url, (err, text) => {
     if(err) throw err;
-    messenger.send(text, err => {
+    messenger.tokenize(text, (err, tokens) => {
       if(err) throw err;
-      messenger.receive((err, entities) => {
-        if(err) throw err;
-        res.send(entities);
-      });
-    });
+      console.log(tokens);
+      res.send(tokens);
+    })
   });
 }
