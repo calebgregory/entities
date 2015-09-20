@@ -15,8 +15,8 @@ export function externalWebpage(req,res) {
     if(err) throw err;
     messenger.tokenize(text, (err, tokens) => {
       if(err) throw err;
-      console.log(tokens);
-      res.send(tokens);
+      console.log(tokens.result.toString());
+      res.send(tokens.result.toString());
     })
   });
 }
