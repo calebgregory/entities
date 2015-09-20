@@ -18,10 +18,12 @@ def main():
         try:
             titles = re.findall(r'<title>(.*?)</title>',sourceCode)
             links = re.findall(r'<link>(.*?)</link>',sourceCode)
-            for title in titles:
-                print title
-            for link in links:
-                print link
+            for link in links[1:]:
+                print 'let\'s visit:', link
+                linkSource = opener.open(link).read()
+                content = re.findall(r'<p>(.*?)</p>',linkSource)
+                for theContent in content:
+                    print theContent
 
         except Exception, e:
             print str(e)
