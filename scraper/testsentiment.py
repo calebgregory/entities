@@ -1,3 +1,4 @@
+from __future__ import division
 import sqlite3
 import time
 
@@ -18,26 +19,53 @@ def loadWordArrays():
         positiveWords.append(posRow[0])
     print 'pos words loaded'
 
-def testSentiment():
-    readFile = open('/Users/calebgregory/code/entities/scraper/negreview.txt', 'r').read()
+def testPositiveSentiment():
+    readFile = open('/Users/calebgregory/code/entities/scraper/<positive-reviews>.txt', 'r').read()
+    splitRead = readFile.split('\n')
+    totalExamples = len(splitRead)
+    posExamplesFound = 0
 
-    sentCounter = 0
+    for eachPosExample in splitRead:
+        sentCounter = 0
+        for eachPosWord in positiveWords:
+            if eachPosWord in eachPosExample:
+                sentCounter += 1
+        for eachNegWord in negativeWords:
+            if eachNegWord in eachPosExample:
+                sentCounter -= 1
 
-    for eachPosWord in positiveWords:
-        if eachPosWord in readFile:
-            sentCounter += 1
-    for eachNegWord in negativeWords:
-        if eachNegWord in readFile:
-            sentCounter -= 1
+        if sentCounter > 0:
+            posExamplesFound += 1
+    print ''
+    print '_____________________________'
+    print ' Positive sentiment accuracy:'
+    print '   found examples:', posExamplesFound
+    print '   out of:', totalExamples
+    print ' positive accuracy:', posExamplesFound/totalExamples*100
 
-    if sentCounter > 1:
-        print 'this text is pos'
-    if sentCounter == 0:
-        print 'this text is neut'
-    if sentCounter < 1:
-        print 'this text is neg'
+def testNegativeSentiment():
+    readFile = open('/Users/calebgregory/code/entities/scraper/<negative-reviews>.txt', 'r').read()
+    splitRead = readFile.split('\n')
+    totalExamples = len(splitRead)
+    negExamplesFound = 0
 
-    print sentCounter
+    for eachNegExample in splitRead:
+        sentCounter = 0
+        for eachPosWord in positiveWords:
+            if eachPosWord in eachNegExample:
+                sentCounter += 1
+        for eachNegWord in negativeWords:
+            if eachNegWord in eachNegExample:
+                sentCounter -= 1
+
+        if sentCounter < 0:
+            negExamplesFound += 1
+    print ''
+    print '_____________________________'
+    print ' Negative sentiment accuracy:'
+    print '   found examples:', negExamplesFound
+    print '   out of:', totalExamples
+    print ' negative accuracy:', negExamplesFound/totalExamples*100
 
 loadWordArrays()
 testSentiment()
