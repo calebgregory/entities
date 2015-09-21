@@ -16,7 +16,6 @@ def main():
         # print sourceCode
 
         try:
-            titles = re.findall(r'<title>(.*?)</title>',sourceCode)
             links = re.findall(r'<link>(.*?)</link>',sourceCode)
             for link in links[1:]:
                 print 'let\'s visit:', link
