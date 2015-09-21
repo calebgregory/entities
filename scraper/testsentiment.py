@@ -68,4 +68,5 @@ def testNegativeSentiment():
     print ' negative accuracy:', negExamplesFound/totalExamples*100
 
 loadWordArrays()
-testSentiment()
+testPostiveSentiment()
+testNegativeSentiment()
