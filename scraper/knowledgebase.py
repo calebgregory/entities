@@ -36,7 +36,6 @@ def processor(data):
             # relate descriptive words to the entity most recently discussed
             # e.g., 'former', 'latter' correspond to two things mentioned
         else:
-            print '_____________________________'
             print 'Named: ',entities[0]
             print 'Descriptions: '
             for eachDesc in descriptives:

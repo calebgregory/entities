@@ -2,7 +2,7 @@
 
 import psycopg2
 
-postgres = """dbname='sentimentdb' user='preachypreach' host='5432' password='<password>'"""
+postgres = """dbname='sentimentdb' user='preachypreach' host='<endpoint>' password='<password>'"""
 
 words = []
 
@@ -26,24 +26,23 @@ def addNegWords():
 
 def addWordsToDb():
     try:
-        conn = psycopg2.connect("dbname='sentimentdb' host='localhost'")
-
+        conn = psycopg2.connect(postgres)
+        print "connection successful"
     except Exception, e:
         print str(e)
-        print 'unable to connect to database'
+        print "unable to connect to database"
 
     c = conn.cursor()
 
-    c.execute("""CREATE TABLE IF NOT EXISTS "sentimentVals" (word TEXT, value real);""")
-
     for word in words:
         try:
-            c.execute("""INSERT INTO "sentimentVals" VALUES ('%s', %s);""" % (word['word'], str(word['value'])))
+            c.execute("""INSERT INTO sentimentval(word, value) VALUES ('%s', %s);""" % (word['word'], str(word['value'])))
         except Exception, e:
             print word
             print str(e)
     conn.commit()
-    c.execute("""SELECT * FROM "sentimentVals" LIMIT 25;""")
+    print "inserted values into table"
+    c.execute("""SELECT * FROM sentimentval LIMIT 25;""")
     rows = c.fetchall()
     print "rows:"
     for row in rows:
@@ -53,3 +52,4 @@ def addWordsToDb():
 addPosiWords()
 addNegWords()
 addWordsToDb()
+print "all done"
