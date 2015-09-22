@@ -12,8 +12,9 @@ cj = CookieJar()
 opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
 opener.addheaders = [('User-Agent', 'Mozilla/5.0')]
 
-#conn = psycopg2.connect('/Users/calebgregory/code/entities/scraper/knowledgebase.sqlite')
-#c = conn.cursor()
+postgres = """dbname='testdb' host='localhost'"""
+conn = psycopg2.connect(postgres)
+c = conn.cursor()
 
 visitedLinks = []
 
@@ -21,7 +22,32 @@ def striphtml(data):
     p = re.compile(r'<.*?>')
     return p.sub('', data)
 
-def processor(data, sourceId):
+# called from
+def isLinkVisited(link):
+    try:
+        c.execute("""SELECT url FROM visitedLinks WHERE url = '%s';""" % (str(link)))
+        return c.fetchone()
+    except Exception, e:
+        print 'failed in isLinkVisited'
+        print str(e)
+
+def addLinkAndGetId(link, sourceName):
+    try:
+        currentTime = time.time()
+        datestamp = datetime.datetime.fromtimestamp(currentTime).strftime('%Y-%m-%d %H:%M:%S')
+        c.execute("""SELECT sourceid FROM sources WHERE name = '%s';""" % (str(sourceName)))
+        sourceid = c.fetchone()[0]
+        c.execute("""INSERT INTO visitedlinks (url, created, sourceid) VALUES ('%s', now(), '%s') RETURNING linkid;""" %
+                (str(link), str(sourceid)))
+        linkid = c.fetchone()[0]
+        conn.commit()
+        return linkid
+        # get linkid
+    except Exception, e:
+        print 'failed in addLink'
+        print str(e)
+
+def processor(data, linkId):
     try:
         tokens = nltk.word_tokenize(data)
         tagged = nltk.pos_tag(tokens)
