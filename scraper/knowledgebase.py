@@ -27,7 +27,6 @@ def isLinkVisited(link):
     try:
         c.execute("""SELECT url FROM visitedLinks WHERE url = '%s';""" % (str(link)))
         article = c.fetchone()
-        print 'article?',article
         if article is None:
             return False
         else:
@@ -87,15 +86,11 @@ def huffingtonRSSVisit():
             for link in links[1:]:
                 linkIsVisited = isLinkVisited(link)
                 if linkIsVisited is True:
-                    print 'link already visited'
                     pass
                 else:
                     linkId = addLinkAndGetId(link, 'Huffington Post') # 2 : Huffington Post
-                    print 'visiting: ', link
-                    print '##################'
                     linkSource = opener.open(link).read()
                     linesOfInterest = re.findall(r'<p>(.*?)</p>', str(linkSource))
-                    print 'Content:'
                     for line in linesOfInterest:
                         processor(striphtml(line), linkId)
         except Exception, e:
@@ -114,18 +109,13 @@ def newYorkTimesRSSVisit():
             for link in links[1:]:
                 linkIsVisited = isLinkVisited(link)
                 if linkIsVisited is True:
-                    print 'link already visited'
                     pass
                 elif 'feedsportal' in link:
-                    print 'stupid feedsportal'
                     pass
                 else:
                     linkId = addLinkAndGetId(link, 'New York Times')
-                    print 'visiting: ', link
-                    print '##################'
                     linkSource = opener.open(link).read()
                     linesOfInterest = re.findall(r'<p class="story-body-text.*?itemprop="articleBody".*?>(.*?)</p>', str(linkSource))
-                    print "Content:"
                     for line in linesOfInterest:
                         processor(striphtml(line), linkId)
         except Exception, e:
