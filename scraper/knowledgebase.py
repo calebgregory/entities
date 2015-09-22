@@ -169,7 +169,29 @@ def nprRSSVisit():
                     print "Content:"
                     for line in linesOfInterest:
                         processor(striphtml(line), linkId)
-                        time.sleep(1)
+        except Exception, e:
+            print str(e)
+    except Exception, e:
+        print str(e)
+
+def cnnRSSVisit():
+    try:
+        page = 'http://rss.cnn.com/rss/cnn_topstories.rss'
+        sourceCode = opener.open(page).read()
+        try:
+            links = re.findall(r'<link>(.*?)</link>', sourceCode)
+            for link in links[2:]:
+                linkIsVisited = isLinkVisited(link)
+                if linkIsVisited is True:
+                    pass
+                elif 'feedsportal' in link:
+                    pass
+                else:
+                    linkId = addLinkAndGetId(link, 'CNN')
+                    linkSource = opener.open(link).read()
+                    linesOfInterest = re.findall(r'<p class="zn-body__paragraph">(.*?)</p>', str(linkSource))
+                    for line in linesOfInterest:
+                        processor(striphtml(line), linkId)
         except Exception, e:
             print str(e)
     except Exception, e:
