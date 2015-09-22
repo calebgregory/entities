@@ -42,7 +42,6 @@ def addLinkAndGetId(link, sourceName):
         linkid = c.fetchone()[0]
         conn.commit()
         return linkid
-        # get linkid
     except Exception, e:
         print 'failed in addLink'
         print str(e)
