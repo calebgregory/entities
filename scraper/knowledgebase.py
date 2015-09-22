@@ -107,19 +107,20 @@ def newYorkTimesRSSVisit():
         try:
             links = re.findall(r'href="(.*?)"', sourceCode)
             for link in links[1:]:
+                linkIsVisited = isLinkVisited(link)
                 if 'feedsportal' in link:
                     pass
-                elif link in visitedLinks:
+                elif linkIsVisited == True:
                     print 'link already visited'
                 else:
-                    visitedLinks.append(link)
+                    linkId = addLinkAndGetId(link, 'New York Times')
                     print 'visiting: ', link
                     print '##################'
                     linkSource = opener.open(link).read()
                     linesOfInterest = re.findall(r'<p class="story-body-text.*?itemprop="articleBody".*?>(.*?)</p>', str(linkSource))
                     print "Content:"
                     for line in linesOfInterest:
-                        processor(striphtml(line), 1)
+                        processor(striphtml(line), linkId)
         except Exception, e:
             print 'failed main loop of newYorkTimesRSSVisit'
             print str(e)
