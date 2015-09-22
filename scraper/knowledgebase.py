@@ -61,35 +61,13 @@ def processor(data, linkId):
             if tag[1] in tagsWeWant:
                 currentTime = time.time()
                 datestamp = datetime.datetime.fromtimestamp(currentTime).strftime('%Y-%m-%d %H:%M:%S')
-
-                time.sleep(1)
-
+                word = re.sub(r'\'','',tag[0].lower())
+                pos = tag[1]
+                c.execute("""INSERT INTO associations (created, word, linkid, pos) VALUES (now(), '%s', '%s', '%s')""" %
+                        (str(word), str(linkId), str(pos)))
+                conn.commit()
             else:
                 print 'we don\'t want', tag
-        #namedEnt = nltk.ne_chunk(tagged, binary=True)
-
-        #entities = re.findall(r'NE\s(.*?)/', str(namedEnt))
-        #descriptives = re.findall(r'\(\'(\w*)\',\s\'JJ\w?\'', str(tagged))
-
-        #if len(entities) > 1:
-            ##multiEntities(data)
-            ## identifies either the main entities or splits that sentence
-            #pass
-            ## into parts that are about each entity
-        #elif len(entities) == 0:
-            #pass
-            ## relate descriptive words to the entity most recently discussed
-            ## e.g., 'former', 'latter' correspond to two things mentioned
-        #else:
-            #print 'Named: ', str.lower(entities[0])
-            #print 'Descriptions: '
-            #for eachDesc in descriptives:
-                #print '      >', str.lower(eachDesc)
-                ##currentTime = time.time()
-                ##namedEntity = entities[0]
-                ##c.execute("""INSERT INTO associations (entity, descriptor, created, source) VALUES (%s,%s,%s,%s,%s)""",
-                        ##(namedEntity, eachDesc, currentTime, sourceId))
-                ##conn.commit()
 
     except Exception, e:
         print 'failed in the first try of processor'
@@ -103,17 +81,18 @@ def huffingtonRSSVisit():
         try:
             links = re.findall(r'<link>(.*?)</link>', sourceCode)
             for link in links[1:]:
-                if link in visitedLinks:
+                linkIsVisited = isLinkVisited(link)
+                if linkIsVisited == True:
                     print 'link already visited'
                 else:
-                    visitedLinks.append(link)
+                    linkId = addLinkAndGetId(link, 'Huffington Post') # 2 : Huffington Post
                     print 'visiting: ', link
                     print '##################'
                     linkSource = opener.open(link).read()
                     linesOfInterest = re.findall(r'<p>(.*?)</p>', str(linkSource))
                     print 'Content:'
                     for line in linesOfInterest:
-                        processor(striphtml(line), 0)
+                        processor(striphtml(line), linkId)
         except Exception, e:
             print 'failed in 2nd loop of huffingtonRSSVisit'
             print str(e)
