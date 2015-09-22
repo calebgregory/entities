@@ -3,7 +3,7 @@
 import psycopg2
 
 postgres = """dbname='sentimentdb' user='preachypreach' host='<endpoint>' password='<password>'"""
-
+postgres2 = """dbname='testdb' host='localhost'"""
 words = []
 
 def addPosiWords():
@@ -26,7 +26,7 @@ def addNegWords():
 
 def addWordsToDb():
     try:
-        conn = psycopg2.connect(postgres)
+        conn = psycopg2.connect(postgres2)
         print "connection successful"
     except Exception, e:
         print str(e)
