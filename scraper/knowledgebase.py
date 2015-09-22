@@ -132,10 +132,11 @@ def foxNewsRSSVisit():
         try:
             links = re.findall(r'<link>(.*?)</link>', sourceCode)
             for link in links[2:]:
-                if link in visitedLinks:
+                linkIsVisited = isLinkVisited(link)
+                if linkIsVisited is True:
                     pass
                 else:
-                    visitedLinks.append(link)
+                    linkId = addLinkAndGetId(link, 'Fox News')
                     print 'visiting: ', link
                     print '##################'
                     linkSource = opener.open(link).read()
