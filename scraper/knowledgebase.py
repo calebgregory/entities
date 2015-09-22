@@ -144,7 +144,32 @@ def foxNewsRSSVisit():
                     for line in linesOfInterest:
                         nohtml = striphtml(line)
                         filteredLine = re.sub('&nbsp;|&quot;', '', nohtml)
-                        processor(filteredLine, 2)
+                        processor(filteredLine, linkId)
+        except Exception, e:
+            print str(e)
+    except Exception, e:
+        print str(e)
+
+def nprRSSVisit():
+    try:
+        page = 'http://www.npr.org/rss/rss.php?id=1001'
+        sourceCode = opener.open(page).read()
+        try:
+            links = re.findall(r'<link>(.*?)</link>', sourceCode)
+            for link in links[2:]:
+                linkIsVisited = isLinkVisited(link)
+                if linkIsVisited is True:
+                    pass
+                else:
+                    linkId = addLinkAndGetId(link, 'NPR')
+                    print 'visiting: ', link
+                    print '##################'
+                    linkSource = opener.open(link).read()
+                    linesOfInterest = re.findall(r'<p>(.*?)</p>', str(linkSource))
+                    print "Content:"
+                    for line in linesOfInterest:
+                        processor(striphtml(line), linkId)
+                        time.sleep(1)
         except Exception, e:
             print str(e)
     except Exception, e:
