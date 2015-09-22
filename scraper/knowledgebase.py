@@ -26,7 +26,12 @@ def striphtml(data):
 def isLinkVisited(link):
     try:
         c.execute("""SELECT url FROM visitedLinks WHERE url = '%s';""" % (str(link)))
-        return c.fetchone()
+        article = c.fetchone()
+        print 'article?',article
+        if article is None:
+            return False
+        else:
+            return True
     except Exception, e:
         print 'failed in isLinkVisited'
         print str(e)
@@ -66,7 +71,7 @@ def processor(data, linkId):
                         (str(word), str(linkId), str(pos)))
                 conn.commit()
             else:
-                print 'we don\'t want', tag
+                pass
 
     except Exception, e:
         print 'failed in the first try of processor'
@@ -81,8 +86,9 @@ def huffingtonRSSVisit():
             links = re.findall(r'<link>(.*?)</link>', sourceCode)
             for link in links[1:]:
                 linkIsVisited = isLinkVisited(link)
-                if linkIsVisited == True:
+                if linkIsVisited is True:
                     print 'link already visited'
+                    pass
                 else:
                     linkId = addLinkAndGetId(link, 'Huffington Post') # 2 : Huffington Post
                     print 'visiting: ', link
@@ -107,10 +113,12 @@ def newYorkTimesRSSVisit():
             links = re.findall(r'href="(.*?)"', sourceCode)
             for link in links[1:]:
                 linkIsVisited = isLinkVisited(link)
-                if 'feedsportal' in link:
-                    pass
-                elif linkIsVisited == True:
+                if linkIsVisited is True:
                     print 'link already visited'
+                    pass
+                elif 'feedsportal' in link:
+                    print 'stupid feedsportal'
+                    pass
                 else:
                     linkId = addLinkAndGetId(link, 'New York Times')
                     print 'visiting: ', link
