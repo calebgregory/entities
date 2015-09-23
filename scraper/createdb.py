@@ -1,3 +1,5 @@
+import psycopg2
+
 postgres = """dbname='testdb' host='localhost'"""
 
 conn = psycopg2.connect(postgres)
