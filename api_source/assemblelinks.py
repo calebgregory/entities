@@ -1,5 +1,6 @@
 import psycopg2
 import time
+import datetime
 
 postgres = """dbname='testdb' host='localhost'"""
 postgres2 = """dbname='testdb2' host=localhost"""
@@ -11,12 +12,9 @@ def doesThisAlreadyExist(articleUrl):
             WHERE url = '%s';
                 """ % (str(articleUrl)))
         article = c2.fetchone()
-        print article
         if article == None:
-            print "True"
             return False
         else:
-            print 'False'
             return True
     except Exception, e:
         print 'failed in first layer of doesThisAlreadyExist'
@@ -41,8 +39,6 @@ def getSentimentsValsForArticle():
                 pass
             else:
                 sendValToNewDb(val)
-            time.sleep(2)
-        print 'hi'
     except Exception, e:
         print 'failed in first layer of getSentimentsValsForArticle'
         print str(e)
@@ -93,19 +89,34 @@ def insertIntoSentimentBySourceDB(source, atTime):
         print 'failed in first layer of insertIntoSentimentBySourceDB'
         print str(e)
 
-
-conn = psycopg2.connect(postgres)
-c = conn.cursor()
-
 conn2 = psycopg2.connect(postgres2)
 c2 = conn2.cursor()
 
 c2.execute("""CREATE TABLE IF NOT EXISTS linkswithsentiment (created timestamp, url TEXT, value REAL);""")
-c2.execute("""CREATE TABLE IF NOT EXISTS sentimentbysource (created timestamp, sourceid INT, name VARCHAR(40), value REAL)""")
+
 conn2.commit()
-
-getSentimentsValsForArticle()
-getSentimentValsByNewsSource()
-
-conn.close()
 conn2.close()
+
+currentTime = time.time()
+dateStamp = datetime.datetime.fromtimestamp(currentTime).strftime('%Y-%m-%d %H:%M:%S')
+print '> Boot successful', dateStamp
+
+
+while (1 < 2):
+    conn = psycopg2.connect(postgres)
+    c = conn.cursor()
+
+    conn2 = psycopg2.connect(postgres2)
+    c2 = conn2.cursor()
+
+    getSentimentsValsForArticle()
+    # getSentimentValsByNewsSource()
+
+    conn.close()
+    conn2.close()
+
+    currentTime = time.time()
+    dateStamp = datetime.datetime.fromtimestamp(currentTime).strftime('%Y-%m-%d %H:%M:%S')
+    print dateStamp, '[ Successfully added more links ]'
+
+    time.sleep(900)
