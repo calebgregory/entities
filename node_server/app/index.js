@@ -14,13 +14,13 @@ app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname);
 app.set('view engine', 'jade');
 
-app.use(less(path.join(process.cwd(),'node_server/www')));
+app.use(less(path.join(process.cwd(),'www')));
 
 app.locals.title = 'Entities';
 
 app.use(morgan('dev'));
 
-app.use(express.static((path.join(process.cwd(),'node_server/www'))));
+app.use(express.static((path.join(process.cwd(),'www'))));
 app.use('/', routes);
 
 require('../lib/errorHandler/');
