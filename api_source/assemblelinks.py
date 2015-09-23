@@ -49,13 +49,11 @@ def getSentimentsValsForArticle():
 
 def sendValToNewDb(val):
     try:
-        print val
-        time.sleep(1)
-        #c2.execute("""
-            #INSERT INTO linkswithsentiment(created,url,value)
-            #VALUES ('%s', '%s', '%s');
-                #""" % (str(val[0]), str(val[1]), str(val[2])))
-        #conn2.commit()
+        c2.execute("""
+            INSERT INTO linkswithsentiment(created,url,value)
+            VALUES ('%s', '%s', '%s');
+                """ % (str(val[0]), str(val[1]), str(val[2])))
+        conn2.commit()
     except Exception, e:
         print 'failed in first layer of sendValToNewDb'
         print str(e)
