@@ -12,10 +12,6 @@ cj = CookieJar()
 opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
 opener.addheaders = [('User-Agent', 'Mozilla/5.0')]
 
-postgres = """dbname='testdb' host='localhost'"""
-conn = psycopg2.connect(postgres)
-c = conn.cursor()
-
 visitedLinks = []
 
 def striphtml(data):
@@ -94,10 +90,8 @@ def huffingtonRSSVisit():
                     for line in linesOfInterest:
                         processor(striphtml(line), linkId)
         except Exception, e:
-            print 'failed in 2nd loop of huffingtonRSSVisit'
             print str(e)
     except Exception, e:
-        print 'failed main loop of huffingtonRSSVisit'
         print str(e)
 
 def newYorkTimesRSSVisit():
@@ -119,10 +113,8 @@ def newYorkTimesRSSVisit():
                     for line in linesOfInterest:
                         processor(striphtml(line), linkId)
         except Exception, e:
-            print 'failed main loop of newYorkTimesRSSVisit'
             print str(e)
     except Exception, e:
-        print 'failed main loop of newYorkTimesRSSVisit'
         print str(e)
 
 def foxNewsRSSVisit():
