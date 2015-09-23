@@ -189,18 +189,94 @@ def cnnRSSVisit():
     except Exception, e:
         print str(e)
 
+def alJazeeraRSSVisit():
+    try:
+        page = 'http://america.aljazeera.com/content/ajam/articles.rss'
+        sourceCode = opener.open(page).read()
+        try:
+            links = re.findall(r'<link>(.*?)</link>', sourceCode)
+            for link in links[1:]:
+                linkIsVisited = isLinkVisited(link)
+                if linkIsVisited is True:
+                    pass
+                else:
+                    linkId = addLinkAndGetId(link, 'Al Jazeera')
+                    linkSource = opener.open(link).read()
+                    linesOfInterest = re.findall(r'<p>(.*?)</p>', str(linkSource))
+                    for line in linesOfInterest:
+                        filteredLine = re.sub(r'&nbsp;', '', line)
+                        processor(striphtml(filteredLine), linkId)
+        except Exception, e:
+            print str(e)
+    except Exception, e:
+        print str(e)
+
+postgres = """dbname='testdb' host='localhost'"""
+
 while 1 < 2:
+
+    conn = psycopg2.connect(postgres)
+    c = conn.cursor()
+
+    huffingtonRSSVisit()
     currentTime = time.time()
     dateStamp = datetime.datetime.fromtimestamp(currentTime).strftime('%Y-%m-%d %H:%M:%S')
-    huffingtonRSSVisit()
-    print 'sleeping'
-    print dateStamp
-    time.sleep(15)
+    print dateStamp, 'Huffington Post'
+    time.sleep(180)
+
+    conn.close()
+
+    conn = psycopg2.connect(postgres)
+    c = conn.cursor()
+
     newYorkTimesRSSVisit()
-    print 'sleeping'
-    print dateStamp
-    time.sleep(15)
+    currentTime = time.time()
+    dateStamp = datetime.datetime.fromtimestamp(currentTime).strftime('%Y-%m-%d %H:%M:%S')
+    print dateStamp, 'New York Times'
+    time.sleep(180)
+
+    conn.close()
+
+    conn = psycopg2.connect(postgres)
+    c = conn.cursor()
+
     foxNewsRSSVisit()
-    print 'sleeping'
-    print dateStamp
-    time.sleep(15)
+    currentTime = time.time()
+    dateStamp = datetime.datetime.fromtimestamp(currentTime).strftime('%Y-%m-%d %H:%M:%S')
+    print dateStamp, 'Fox News'
+    time.sleep(180)
+
+    conn.close()
+
+    conn = psycopg2.connect(postgres)
+    c = conn.cursor()
+
+    nprRSSVisit()
+    currentTime = time.time()
+    dateStamp = datetime.datetime.fromtimestamp(currentTime).strftime('%Y-%m-%d %H:%M:%S')
+    print dateStamp, 'NPR'
+    time.sleep(180)
+
+    conn.close()
+
+    conn = psycopg2.connect(postgres)
+    c = conn.cursor()
+
+    cnnRSSVisit()
+    currentTime = time.time()
+    dateStamp = datetime.datetime.fromtimestamp(currentTime).strftime('%Y-%m-%d %H:%M:%S')
+    print dateStamp, 'CNN'
+    time.sleep(180)
+
+    conn.close()
+
+    conn = psycopg2.connect(postgres)
+    c = conn.cursor()
+
+    alJazeeraRSSVisit()
+    currentTime = time.time()
+    dateStamp = datetime.datetime.fromtimestamp(currentTime).strftime('%Y-%m-%d %H:%M:%S')
+    print dateStamp, 'Al Jazeera'
+    time.sleep(180)
+
+    conn.close()
