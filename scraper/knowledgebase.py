@@ -69,8 +69,8 @@ def processor(data, linkId):
                 pass
 
     except Exception, e:
-        print 'failed in the first try of processor'
-        print str(e)
+        if "'ascii' codec can't decode byte" not in e:
+            print str(e)
 
 
 def huffingtonRSSVisit():
