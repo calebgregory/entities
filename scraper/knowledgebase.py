@@ -35,10 +35,11 @@ def addLinkAndGetId(link, sourceName):
     try:
         currentTime = time.time()
         datestamp = datetime.datetime.fromtimestamp(currentTime).strftime('%Y-%m-%d %H:%M:%S')
+
         c.execute("""SELECT sourceid FROM sources WHERE name = '%s';""" % (str(sourceName)))
         sourceid = c.fetchone()[0]
-        c.execute("""INSERT INTO visitedlinks (url, created, sourceid) VALUES ('%s', now(), '%s') RETURNING linkid;""" %
-                (str(link), str(sourceid)))
+        c.execute("""INSERT INTO visitedlinks (url, created, sourceid) VALUES ('%s', '%s', '%s') RETURNING linkid;""" %
+                (str(link), datestamp, str(sourceid)))
         linkid = c.fetchone()[0]
         conn.commit()
         return linkid
@@ -52,19 +53,21 @@ def processor(data, linkId):
         tokens = nltk.word_tokenize(filteredData)
         tagged = nltk.pos_tag(tokens)
 
+        currentTime = time.time()
+        datestamp = datetime.datetime.fromtimestamp(currentTime).strftime('%Y-%m-%d %H:%M:%S')
+
         tagsWeWant = ['JJ', 'JJR', 'JJS',
                 'NN', 'NNS',
                 'PRP', 'PRPS',
                 'RB', 'RBR', 'RBS',
                 'VB', 'VBD', 'VBG', 'VBN', 'VBP', 'VBZ', 'VBT']
+
         for tag in tagged:
             if tag[1] in tagsWeWant:
-                currentTime = time.time()
-                datestamp = datetime.datetime.fromtimestamp(currentTime).strftime('%Y-%m-%d %H:%M:%S')
                 word = re.sub(r'\'','',tag[0].lower())
                 pos = tag[1]
-                c.execute("""INSERT INTO associations (created, word, linkid, pos) VALUES (now(), '%s', '%s', '%s')""" %
-                        (str(word), str(linkId), str(pos)))
+                c.execute("""INSERT INTO associations (created, word, linkid, pos) VALUES ('%s', '%s', '%s', '%s')""" %
+                        (datestamp, str(word), str(linkId), str(pos)))
                 conn.commit()
             else:
                 pass
@@ -234,7 +237,11 @@ while 1 < 2:
     currentTime = time.time()
     dateStamp = datetime.datetime.fromtimestamp(currentTime).strftime('%Y-%m-%d %H:%M:%S')
     print dateStamp, 'Huffington Post'
+<<<<<<< Updated upstream
     time.sleep(180)
+=======
+    time.sleep(3)
+>>>>>>> Stashed changes
 
     conn.close()
 
@@ -245,7 +252,11 @@ while 1 < 2:
     currentTime = time.time()
     dateStamp = datetime.datetime.fromtimestamp(currentTime).strftime('%Y-%m-%d %H:%M:%S')
     print dateStamp, 'New York Times'
+<<<<<<< Updated upstream
     time.sleep(180)
+=======
+    time.sleep(3)
+>>>>>>> Stashed changes
 
     conn.close()
 
@@ -256,7 +267,11 @@ while 1 < 2:
     currentTime = time.time()
     dateStamp = datetime.datetime.fromtimestamp(currentTime).strftime('%Y-%m-%d %H:%M:%S')
     print dateStamp, 'Fox News'
+<<<<<<< Updated upstream
     time.sleep(180)
+=======
+    time.sleep(3)
+>>>>>>> Stashed changes
 
     conn.close()
 
@@ -267,7 +282,11 @@ while 1 < 2:
     currentTime = time.time()
     dateStamp = datetime.datetime.fromtimestamp(currentTime).strftime('%Y-%m-%d %H:%M:%S')
     print dateStamp, 'NPR'
+<<<<<<< Updated upstream
     time.sleep(180)
+=======
+    time.sleep(3)
+>>>>>>> Stashed changes
 
     conn.close()
 
@@ -278,7 +297,11 @@ while 1 < 2:
     currentTime = time.time()
     dateStamp = datetime.datetime.fromtimestamp(currentTime).strftime('%Y-%m-%d %H:%M:%S')
     print dateStamp, 'CNN'
+<<<<<<< Updated upstream
     time.sleep(180)
+=======
+    time.sleep(3)
+>>>>>>> Stashed changes
 
     conn.close()
 
@@ -289,6 +312,10 @@ while 1 < 2:
     currentTime = time.time()
     dateStamp = datetime.datetime.fromtimestamp(currentTime).strftime('%Y-%m-%d %H:%M:%S')
     print dateStamp, 'Al Jazeera'
+<<<<<<< Updated upstream
     time.sleep(180)
+=======
+    time.sleep(3)
+>>>>>>> Stashed changes
 
     conn.close()
