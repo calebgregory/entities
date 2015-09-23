@@ -1,0 +1,61 @@
+TECHNIQUES FOR TESTING SENTIMENT ANALYSIS ALGORITHM
+
+1. pool of back testing data
+  - pull data,
+  - look for part of speech / syntax similarities
+
+2. sentiment index algorithm / nlp algorithm
+  - need known examples of sentiment text
+  - you need to know whether it is positive or negative, and
+      how positive or how negative
+  - you can derive a percentage accuracy
+  - take the number of those articles identified as positive and
+    divide it by the total number of positive articles to get a % accuracy
+  - take the examples where you failed to see exactly where you went wrong,
+  - print all the located words in the incorrect assessments
+  - everytime you're incorrect, log all the words used, and/or the syntax structure
+  - sometimes you've miscategorized a part of speech, which throws off your NLP
+  - if you're using a bag of words model, you can find out if a certain group of words is
+  - Go through body of text
+      print out all the words and syntax structures that went wrong
+      tallying up how many times you've seen this word in an incorrectly assessed sentiment
+      and how many times you've seen it positively assessed
+      see the ratio of this exact structure being right or wrong
+      build up "stop" words that get by-passed
+  - python module scikit learn
+      http://www.astroml.org/sklearn_tutorial/
+
+
+
+Parts of speech:
+
+JJ[R|S]?
+NN[S]?\b
+PRP[S]?
+RB[R|S]?
+VB[D|G|N|P|Z|T]?
+
+WORDS IN ARTICLES:
+url
+word
+pos
+date
+
+>>>>>>> QUERY FOR GETTING POSI/NEGI ARTICLES SORTED BY TIME DESC . . .
+
+SELECT VL.created, VL.url, SUM(SV.value) FROM visitedlinks AS VL
+INNER JOIN associations AS A
+ON A.linkid = VL.linkID
+INNER JOIN sentimentval AS SV
+ON SV.word = A.word
+GROUP BY SV.value, VL.url, VL.created
+HAVING SUM(SV.value) < 0
+ORDER BY VL.created ASC;
+
+>>>>>>>> OR IN A RANGE ! !! ! !
+ON A.linkid = VL.linkID
+INNER JOIN sentimentval AS SV
+ON SV.word = A.word
+GROUP BY SV.value, VL.url, VL.created
+HAVING SUM(SV.value) BETWEEN -15 AND 0
+ORDER BY VL.created DESC;
