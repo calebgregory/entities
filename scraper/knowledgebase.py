@@ -151,11 +151,8 @@ def nprRSSVisit():
                     pass
                 else:
                     linkId = addLinkAndGetId(link, 'NPR')
-                    print 'visiting: ', link
-                    print '##################'
                     linkSource = opener.open(link).read()
                     linesOfInterest = re.findall(r'<p>(.*?)</p>', str(linkSource))
-                    print "Content:"
                     for line in linesOfInterest:
                         processor(striphtml(line), linkId)
         except Exception, e:
