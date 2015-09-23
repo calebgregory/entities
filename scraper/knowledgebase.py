@@ -48,7 +48,8 @@ def addLinkAndGetId(link, sourceName):
 
 def processor(data, linkId):
     try:
-        tokens = nltk.word_tokenize(data)
+        filteredData = re.sub('&nbsp;|&quot;', '', data)
+        tokens = nltk.word_tokenize(filteredData)
         tagged = nltk.pos_tag(tokens)
 
         tagsWeWant = ['JJ', 'JJR', 'JJS',
@@ -69,7 +70,7 @@ def processor(data, linkId):
                 pass
 
     except Exception, e:
-        if "'ascii' codec can't decode byte" not in e:
+        if "'ascii' codec" not in str(e):
             print str(e)
 
 
@@ -129,14 +130,10 @@ def foxNewsRSSVisit():
                     pass
                 else:
                     linkId = addLinkAndGetId(link, 'Fox News')
-                    print 'visiting: ', link
-                    print '##################'
                     linkSource = opener.open(link).read()
                     linesOfInterest = re.findall(r'<p>(.*?)</p>',linkSource)
                     for line in linesOfInterest:
-                        nohtml = striphtml(line)
-                        filteredLine = re.sub('&nbsp;|&quot;', '', nohtml)
-                        processor(filteredLine, linkId)
+                        processor(striphtml(line), linkId)
         except Exception, e:
             print str(e)
     except Exception, e:
@@ -204,8 +201,7 @@ def alJazeeraRSSVisit():
                     linkSource = opener.open(link).read()
                     linesOfInterest = re.findall(r'<p>(.*?)</p>', str(linkSource))
                     for line in linesOfInterest:
-                        filteredLine = re.sub(r'&nbsp;', '', line)
-                        processor(striphtml(filteredLine), linkId)
+                        processor(striphtml(line), linkId)
         except Exception, e:
             print str(e)
     except Exception, e:
