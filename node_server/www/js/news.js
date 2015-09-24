@@ -9,8 +9,11 @@ socket.on('connect', obj => {
 socket.on('news', msg => {
   msg = JSON.parse(msg);
 
+  var box = document.createElement('DIV');
+  box.classList.add('box');
+
   var article = document.createElement('DIV');
-  article.classList.add('article')
+  article.classList.add('internal-content');
 
   var h1 = document.createElement('H1');
   var a = document.createElement('A');
@@ -42,7 +45,8 @@ socket.on('news', msg => {
     content.appendChild(p);
   });
 
-  articles.appendChild(article);
+  box.appendChild(article);
+  articles.appendChild(box);
 });
 
 function generateHeadline(msg) {
