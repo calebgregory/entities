@@ -4,6 +4,8 @@ var celery = require('node-celery');
 
 export function getText(articles, cb) {
 
+  console.log('made it into messenger');
+
   var urls = articles.map(article => { return article.url; });
 
   var client = celery.createClient({
@@ -13,6 +15,8 @@ export function getText(articles, cb) {
   });
 
   client.on('connect', () => {
+
+    console.log ('made it into celery')
     urls.forEach(url => {
       var result = client.call('framework.tasks.visit', [url]);
       setTimeout(() => {
