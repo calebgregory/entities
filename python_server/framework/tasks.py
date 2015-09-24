@@ -22,7 +22,7 @@ def strip(data):
     return p.sub('', data)
 
 @app.task
-def visit(url):
+def visit(url, sentiment_value):
     try:
         page = url;
         sourceCode = opener.open(page).read()
@@ -40,6 +40,7 @@ def visit(url):
             content.append(strip(line))
         output['content'] = content
         output['url'] = url
+        output['sentimentValue'] = sentiment_value
         return json.dumps(output)
     except Exception, e:
         print str(e)
