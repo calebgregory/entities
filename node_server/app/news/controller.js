@@ -4,15 +4,27 @@ var Articles = require('./Articles');
 var messenger = require('./messenger');
 var emit = require('./emit');
 
+var newsSourceMap = {
+  'hp': 'Huffington Post',
+  'cnn': 'CNN',
+  'npr': 'NPR',
+  'aj': 'Al Jazeera',
+  'fn': 'Fox News',
+  'nyt': 'New York Times'
+};
+
 export function index(req,res) {
-  res.redirect('/news/page/1')
+  res.redirect('/')
 };
 
 export function page(io) {
   return function(req,res) {
+
     var pageNumber = req.params.page;
 
-    Articles.getValuatedArticles(pageNumber, (err, articles) => {
+    var newsSource = newsSourceMap[req.params.source];
+
+    Articles.getValuatedArticles(newsSource, pageNumber, (err, articles) => {
       if(err) console.log(err);
 
       console.log('made it into controller')
@@ -23,8 +35,8 @@ export function page(io) {
       });
 
       res.render('news/index',
-                 { page : 'positive',
-                   articles : ['caleb'] });
+                 { source : newsSource,
+                   page : pageNumber });
     });
   };
 }
