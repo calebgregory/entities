@@ -27,7 +27,7 @@ def visit(url):
         else:
             linesOfInterest = re.findall(r'<p>(.*?)</p>', str(sourceCode))
         output = {}
-        output['headline'] = headline
+        output['headline'] = headline[0]
         content = []
         for line in linesOfInterest:
             content.append(hs.strip(line))
