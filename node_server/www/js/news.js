@@ -13,9 +13,12 @@ socket.on('news', msg => {
   article.classList.add('article')
 
   var h1 = document.createElement('H1');
-  h1.classList.add('headline');
+  var a = document.createElement('A');
+  a.setAttribute('href', msg.url)
   var textNode = document.createTextNode(msg.headline);
-  h1.appendChild(textNode);
+  a.classList.add('headline');
+  a.appendChild(textNode);
+  h1.appendChild(a);
   article.appendChild(h1);
 
   var content = document.createElement('DIV');
