@@ -16,7 +16,9 @@ opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
 opener.addheaders = [('User-Agent', 'Mozilla/5.0')]
 
 def strip(data):
-    p = re.compile(r'<.*?>|&nbsp;|&quot;')
+    data = re.sub(r'&quot;','"',data)
+    data = re.sub(r'&amp;','&',data)
+    p = re.compile(r'<.*?>|&nbsp;')
     return p.sub('', data)
 
 @app.task
@@ -37,6 +39,7 @@ def visit(url):
         for line in linesOfInterest:
             content.append(strip(line))
         output['content'] = content
+        output['url'] = url
         return json.dumps(output)
     except Exception, e:
         print str(e)
