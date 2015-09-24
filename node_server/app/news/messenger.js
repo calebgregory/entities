@@ -2,7 +2,9 @@
 
 var celery = require('node-celery');
 
-export function getText(url, cb) {
+export function getText(articles, cb) {
+
+  var urls = articles.map(article => { return article.url; });
 
   var client = celery.createClient({
     CELERY_BROKER_URL: 'amqp://guest:guest@localhost:5672//',
@@ -11,9 +13,13 @@ export function getText(url, cb) {
   });
 
   client.on('connect', () => {
-    var result = client.call('framework.tasks.visit', [url]);
-    result.on('ready', data => {
-      cb(null, data);
-    });
+    urls.forEach(url => {
+      var result = client.call('framework.tasks.visit', [url]);
+      setTimeout(() => {
+        result.on('ready', data => {
+          cb(null, data);
+        });
+      }, 250);
+    })
   });
 }
