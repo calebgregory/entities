@@ -14,7 +14,7 @@ export function getValuatedArticles(newsSource, pageNumber, cb) {
     }
 
     var numberPerPage = 5;
-    var start = (1 - pageNumber) * numberPerPage;
+    var start = (pageNumber - 1) * numberPerPage;
 
     console.log('newSource:', newsSource)
     // select 'positive' news stories, 5 at a time, starting at the page_number * 5
