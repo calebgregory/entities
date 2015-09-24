@@ -1,9 +1,10 @@
 'use strict';
 
-var express = require('express')
-  , less = require('less-middleware')
-  , morgan  = require('morgan')
-  , path    = require('path');
+var express  = require('express')
+  , less     = require('less-middleware')
+  , morgan   = require('morgan')
+  , path     = require('path')
+  , socketio = require('socket.io');
 
 var routes  = require('./routes');
 
@@ -30,4 +31,18 @@ var server = app.listen(app.get('port'), () => {
   var mode = app.get('env');
 
   console.log(`Server listening on port ${port} in ${mode} mode . . .`);
+});
+
+var io = socketio(server);
+
+io.on('connection', socket => {
+
+  socket.on('article', contents => {
+    console.log(contents);
+  });
+
+  socket.on('my other event', data => {
+    console.log(data);
+  });
+
 });
