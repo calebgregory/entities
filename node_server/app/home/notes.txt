@@ -1,0 +1,13 @@
+how does each news source rank?
+    SELECT  S.sourceid, S.name, SUM(sv.value)
+    FROM sources AS S
+    INNER JOIN visitedLinks AS VL
+    ON VL.sourceid = S.sourceid
+    INNER JOIN associations AS A
+    ON A.linkid = VL.linkid
+    INNER JOIN sentimentval AS SV
+    ON SV.word = A.word
+    GROUP BY S.sourceid, S.name
+    ORDER BY S.sourceid;
+
+
