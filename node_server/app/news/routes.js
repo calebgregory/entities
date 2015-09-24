@@ -6,7 +6,6 @@ var express = require('express')
 var ctrl = require('./controller');
 
 router.get('/', ctrl.index);
-router.get('/negative', ctrl.negative);
-router.get('/positive', ctrl.positive);
+router.get('/page/:page', ctrl.positive);
 
 module.exports = router;

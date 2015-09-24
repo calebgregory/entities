@@ -3,8 +3,6 @@ extends ../templates/layout
 block content
   if(page === 'positive')
     include partials/positive
-  else if(page === 'negative')
-    include partials/negative
   else
     h1 I don't know what you're trying to do here, sorry.
     a(href="/") Go back home
