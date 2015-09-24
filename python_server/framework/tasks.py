@@ -35,7 +35,7 @@ def visit(url):
         output['headline'] = headline[0]
         content = []
         for line in linesOfInterest:
-            content.append(hs.strip(line))
+            content.append(strip(line))
         output['content'] = content
         return json.dumps(output)
     except Exception, e:
