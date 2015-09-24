@@ -7,7 +7,7 @@ var ctrl = require('./controller');
 
 module.exports = function(io) {
   router.get('/', ctrl.index);
-  router.get('/page/:page', ctrl.positive(io));
+  router.get('/page/:page', ctrl.page(io));
 
   return router;
 };
