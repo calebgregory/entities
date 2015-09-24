@@ -21,14 +21,24 @@ socket.on('news', msg => {
   h1.appendChild(a);
   article.appendChild(h1);
 
+  var h3 = document.createElement('H3');
+  var textNode2 = document.createTextNode('Sentiment Value: ')
+  h3.appendChild(textNode2);
+  var span = document.createElement('SPAN');
+  span.classList.add('sentiment-value')
+  var textNode3 = document.createTextNode(msg.sentimentValue);
+  span.appendChild(textNode3);
+  h3.appendChild(span);
+  article.appendChild(h3);
+
   var content = document.createElement('DIV');
   content.classList.add('content');
   article.appendChild(content);
 
   msg.content.forEach(paragraph => {
     var p = document.createElement('P');
-    var textNode = document.createTextNode(paragraph);
-    p.appendChild(textNode);
+    var textNode3 = document.createTextNode(paragraph);
+    p.appendChild(textNode3);
     content.appendChild(p);
   });
 

@@ -6,7 +6,12 @@ export function getText(articles, cb) {
 
   console.log('made it into messenger');
 
-  var urls = articles.map(article => { return article.url; });
+  var articles = articles.map(article => {
+    return {
+      url : article.url,
+      sentimentValue : article.value
+    };
+  });
 
   var client = celery.createClient({
     CELERY_BROKER_URL: 'amqp://guest:guest@localhost:5672//',
@@ -17,8 +22,8 @@ export function getText(articles, cb) {
   client.on('connect', () => {
 
     console.log ('made it into celery')
-    urls.forEach(url => {
-      var result = client.call('framework.tasks.visit', [url]);
+    articles.forEach(article => {
+      var result = client.call('framework.tasks.visit', [article.url, article.sentimentValue]);
       setTimeout(() => {
         result.on('ready', data => {
           cb(null, data);
