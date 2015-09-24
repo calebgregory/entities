@@ -1,16 +1,20 @@
 'use strict';
 
-var express  = require('express')
-  , less     = require('less-middleware')
-  , morgan   = require('morgan')
-  , path     = require('path')
-  , socketio = require('socket.io');
+var express   = require('express')
+  , http      = require('http')
+  , less      = require('less-middleware')
+  , morgan    = require('morgan')
+  , path      = require('path')
+  , socketio  = require('socket.io');
 
 var routes  = require('./routes');
 
 var app = module.exports = express();
 
 app.set('port', process.env.PORT || 3000);
+
+var server = app.listen(app.get('port'))
+  , io     = socketio.listen(server);
 
 app.set('views', __dirname);
 app.set('view engine', 'jade');
@@ -22,27 +26,6 @@ app.locals.title = 'Entities';
 app.use(morgan('dev'));
 
 app.use(express.static((path.join(process.cwd(),'www'))));
-app.use('/', routes);
+app.use('/', routes(io));
 
 require('../lib/errorHandler/');
-
-var server = app.listen(app.get('port'), () => {
-  var port = server.address().port;
-  var mode = app.get('env');
-
-  console.log(`Server listening on port ${port} in ${mode} mode . . .`);
-});
-
-var io = socketio(server);
-
-io.on('connection', socket => {
-
-  socket.on('article', contents => {
-    console.log(contents);
-  });
-
-  socket.on('my other event', data => {
-    console.log(data);
-  });
-
-});
