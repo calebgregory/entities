@@ -4,5 +4,5 @@ from framework.celery import app
 from visiter import visit
 
 @app.task
-def visitPage(url):
+def visit_page(url):
     return visit(url)
