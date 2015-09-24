@@ -5,7 +5,9 @@ var express = require('express')
 
 var ctrl = require('./controller');
 
-router.get('/', ctrl.index);
-router.get('/page/:page', ctrl.positive);
+module.exports = function(io) {
+  router.get('/', ctrl.index);
+  router.get('/page/:page', ctrl.positive(io));
 
-module.exports = router;
+  return router;
+};
