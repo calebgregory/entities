@@ -1,16 +1,18 @@
 'use strict';
 
+var Articles = require('./Articles');
+var ac = require('./article-content');
+
 export function index(req,res) {
-  res.render('news/index',
-             { page : 'news' });
+  res.redirect('/news/page/1')
 };
 
 export function positive(req,res) {
-  res.render('news/index',
-             { page : 'positive' });
-};
+  var pageNumber = req.params.page;
 
-export function negative(req,res) {
-  res.render('news/index',
-             { page : 'negative' });
+  Articles.getValuatedArticles(pageNumber, (err, articles) => {
+    res.render('news/index',
+               { page : 'positive',
+                 articles : articles });
+  });
 };
