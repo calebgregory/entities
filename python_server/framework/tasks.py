@@ -1,8 +1,42 @@
 from __future__ import absolute_import
 
 from framework.celery import app
-from visiter import visit
+
+import time
+import urllib2
+from urllib2 import urlopen
+import re
+import cookielib
+from cookielib import CookieJar
+import datetime
+import json
+
+cj = CookieJar()
+opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
+opener.addheaders = [('User-Agent', 'Mozilla/5.0')]
+
+def strip(data):
+    p = re.compile(r'<.*?>|&nbsp;|&quot;')
+    return p.sub('', data)
 
 @app.task
-def visit_page(url):
-    return visit(url)
+def visit(url):
+    try:
+        page = url;
+        sourceCode = opener.open(page).read()
+        headline = re.findall(r'<h1.*?>(.*?)</h1', str(sourceCode))
+        if 'cnn' in page:
+            linesOfInterest = re.findall(r'<p class="zn-body__paragraph">(.*?)</p>', str(sourceCode))
+        elif 'nytimes' in page:
+            linesOfInterest = re.findall(r'<p class="story-body-text.*?itemprop="articleBody".*?>(.*?)</p>', str(sourceCode))
+        else:
+            linesOfInterest = re.findall(r'<p>(.*?)</p>', str(sourceCode))
+        output = {}
+        output['headline'] = headline[0]
+        content = []
+        for line in linesOfInterest:
+            content.append(hs.strip(line))
+        output['content'] = content
+        return json.dumps(output)
+    except Exception, e:
+        print str(e)
