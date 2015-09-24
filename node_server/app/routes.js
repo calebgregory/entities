@@ -6,8 +6,11 @@ var express = require('express')
 var home    = require('./home/routes');
 var news    = require('./news/routes')
 
-router.use('/', home);
-router.use('/news', news)
 
+export default function(io) {
 
-export default router;
+  router.use('/', home);
+  router.use('/news', news(io));
+
+  return router;
+};
