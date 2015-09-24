@@ -1,6 +1,5 @@
 extends ../templates/layout
 
 block content
-  form(name="get-site", action="/external-webpage", method="GET")
-    input(type="url" name="url" placeholder="http://some.webpage.com")
-    input(type="submit" value="gimme")
+  include partials/about
+  include partials/choose
