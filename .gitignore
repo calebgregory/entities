@@ -31,3 +31,4 @@ venv
 *.pyc
 .Python
 */www/lib
+z_scraps
