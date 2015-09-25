@@ -36,6 +36,7 @@ export function page(io) {
 
       res.render('news/index',
                  { source : newsSource,
+                   reqsrc : req.params.source,
                    page : pageNumber });
     });
   };

@@ -1,4 +1,10 @@
 footer
+  if(source)
+    .navigator
+      ul
+        if page > 1
+          li: a(href="/news/"+reqsrc+"/page/"+(page*1 - 1)) back
+        li: a(href="/news/"+reqsrc+"/page/"+(page*1 + 1))    next
   pre
     |      /   __/     /   __/     /   __/     /   __/     /   __/     /   _
     | __   \__/  \__   \__/  \__   \__/  \__   \__/  \__   \__/  \__   \__/
