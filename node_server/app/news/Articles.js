@@ -7,8 +7,6 @@ export function getValuatedArticles(newsSource, pageNumber, cb) {
 
   pg.connect(conString, (err,client,done) => {
 
-    console.log('made it into Articles model');
-
     if(err) {
       return console.error('error fetching client from pool', err)
     }
@@ -16,7 +14,6 @@ export function getValuatedArticles(newsSource, pageNumber, cb) {
     var numberPerPage = 5;
     var start = (pageNumber - 1) * numberPerPage;
 
-    console.log('newSource:', newsSource)
     // select 'positive' news stories, 5 at a time, starting at the page_number * 5
     // then send to controller
     client.query("SELECT * FROM linkswithsentiment WHERE sourcename = $1 AND value > 0 ORDER BY created DESC LIMIT $2 OFFSET $3;",
