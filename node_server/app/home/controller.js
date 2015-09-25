@@ -2,21 +2,16 @@
 
 var parser = require('./parser').parse;
 var messenger = require('./messenger');
+var Sources = require('./Sources')
 
 export function index(req,res) {
-  res.render('home/index',
-             { page : 'Home' });
+  Sources.getValuatedSources((err,data) => {
+    if(err) console.log(err);
+
+    console.log(data);
+    res.render('home/index',
+               { page : 'Home',
+                 sources : data });
+  })
 };
 
-export function externalWebpage(req,res) {
-  var externalWebpage = req.query;
-
-  parser(externalWebpage.url, (err, text) => {
-    if(err) throw err;
-    messenger.tokenize(text, (err, tokens) => {
-      if(err) throw err;
-      console.log(tokens.result.toString());
-      res.send(tokens.result.toString());
-    })
-  });
-}
