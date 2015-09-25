@@ -27,8 +27,6 @@ export function getValuatedArticles(newsSource, pageNumber, cb) {
         return console.error('error running query', err);
       }
 
-      console.log(result.rows);
-
       cb(null, result.rows)
       client.end();
 
