@@ -1,72 +1,89 @@
 from __future__ import division
-import sqlite3
+import psycopg2
+import os
 import time
-
-conn = sqlite3.connect('/Users/calebgregory/code/entities/scraper/knowledgebase.sqlite')
-c = conn.cursor()
 
 negativeWords = []
 positiveWords = []
 
-sql = "SELECT * FROM wordVals WHERE value =?"
+sql = """SELECT word FROM sentimentval WHERE value = '%s'"""
 
 def loadWordArrays():
-    for negRow in c.execute(sql, [(-1.0)]):
-        negativeWords.append(negRow[0])
-    print 'neg words loaded'
+    c.execute("""SELECT * FROM sentimentval WHERE value = '-1';""")
+    allNegRows = c.fetchall()
+    for negRow in allNegRows:
+        negativeWords.append(negRow[1])
+    print 'neg words loaded: >> total:', len(negativeWords)
 
-    for posRow in c.execute(sql, [(1.0)]):
-        positiveWords.append(posRow[0])
-    print 'pos words loaded'
+    c.execute("""SELECT * FROM sentimentval WHERE value = '1';""")
+    allPosRows = c.fetchall()
+    for posRow in allPosRows:
+        positiveWords.append(posRow[1])
+    print 'pos words loaded: >> total:', len(positiveWords)
 
 def testPositiveSentiment():
-    readFile = open('/Users/calebgregory/code/entities/scraper/<positive-reviews>.txt', 'r').read()
-    splitRead = readFile.split('\n')
-    totalExamples = len(splitRead)
+    pathToDir = '/Users/calebgregory/code/entities/scraper/pos'
+    examples = os.listdir(pathToDir)
+
+    totalExamples = len(examples)
     posExamplesFound = 0
 
-    for eachPosExample in splitRead:
+    for filename in examples:
+        readFile = open(os.path.join(pathToDir,filename), 'r').read()
         sentCounter = 0
         for eachPosWord in positiveWords:
-            if eachPosWord in eachPosExample:
-                sentCounter += 1
+            if eachPosWord in readFile:
+                sentCounter += 1.475
         for eachNegWord in negativeWords:
-            if eachNegWord in eachPosExample:
+            if eachNegWord in readFile:
                 sentCounter -= 1
 
         if sentCounter > 0:
             posExamplesFound += 1
+
     print ''
     print '_____________________________'
     print ' Positive sentiment accuracy:'
     print '   found examples:', posExamplesFound
     print '   out of:', totalExamples
+    print '   from all files in:', pathToDir
     print ' positive accuracy:', posExamplesFound/totalExamples*100
 
 def testNegativeSentiment():
-    readFile = open('/Users/calebgregory/code/entities/scraper/<negative-reviews>.txt', 'r').read()
-    splitRead = readFile.split('\n')
-    totalExamples = len(splitRead)
-    negExamplesFound = 0
 
-    for eachNegExample in splitRead:
+    pathToDir = '/Users/calebgregory/code/entities/scraper/neg'
+    examples = os.listdir(pathToDir)
+
+    negExamplesFound = 0
+    totalExamples = len(examples)
+
+    for filename in examples:
+        readFile = open(os.path.join(pathToDir,filename), 'r').read()
         sentCounter = 0
         for eachPosWord in positiveWords:
-            if eachPosWord in eachNegExample:
-                sentCounter += 1
+            if eachPosWord in readFile:
+                sentCounter += 1.475
         for eachNegWord in negativeWords:
-            if eachNegWord in eachNegExample:
+            if eachNegWord in readFile:
                 sentCounter -= 1
 
         if sentCounter < 0:
             negExamplesFound += 1
+
     print ''
     print '_____________________________'
     print ' Negative sentiment accuracy:'
     print '   found examples:', negExamplesFound
     print '   out of:', totalExamples
+    print '   from all files in:', pathToDir
     print ' negative accuracy:', negExamplesFound/totalExamples*100
 
+conn = psycopg2.connect("""dbname='testdb' host='localhost'""")
+c = conn.cursor()
+
 loadWordArrays()
-testPostiveSentiment()
+
+conn.close()
+
+testPositiveSentiment()
 testNegativeSentiment()
