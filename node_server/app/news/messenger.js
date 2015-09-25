@@ -15,7 +15,7 @@ export function getText(articles, cb) {
 
   var client = celery.createClient({
     CELERY_BROKER_OPTIONS: {
-      host: 'local',
+      host: 'localhost',
       port: '5672',
       CELERY_RESULT_BACKEND: 'amqp://',
       CELERY_TASK_SERIALIZER: 'json'
@@ -32,7 +32,6 @@ export function getText(articles, cb) {
 
     articles.forEach(article => {
       var result = client.call('framework.tasks.visit', [article.url, article.sentimentValue]);
-      console.log('called task')
 
       setTimeout(() => {
         result.on('ready', data => {
