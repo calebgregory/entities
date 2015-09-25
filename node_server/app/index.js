@@ -9,6 +9,8 @@ var express   = require('express')
 
 var routes  = require('./routes');
 
+require('../lib/secrets');
+
 var app = module.exports = express();
 
 app.set('port', process.env.PORT || 3000);
