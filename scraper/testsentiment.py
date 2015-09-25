@@ -8,6 +8,14 @@ positiveWords = []
 
 sql = """SELECT word FROM sentimentval WHERE value = '%s'"""
 
+#
+#
+#       download dataset at:
+#       http://ai.stanford.edu/~amaas/data/sentiment/
+#
+#
+#
+
 def loadWordArrays():
     c.execute("""SELECT * FROM sentimentval WHERE value = '-1';""")
     allNegRows = c.fetchall()
