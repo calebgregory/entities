@@ -1,0 +1,30 @@
+.internal-content
+  h1 Details on metrics
+  h3 A recipe for fun
+  p To find how an article ranks, first one chops up each article by word, places these in a set and compares each word in this set to each word in another set of words, each word of which has an associated sentiment value. Then add the matched words' sentiment values together, and bam: you have a sentiment analysis.
+  p This is a crude method, but it can turn up interesting results, especially when combined with backpropagation of error.
+  p Here I'm sticking to summing using a lexicon provided by one or more of the gentlemen
+    a(href="http://www.cs.uic.edu/~liub/FBS/sentiment-analysis.html")  Bing Liu, Minqing Hu and Junsheng Cheng
+    | . I have weighted all positive values to 1.475 and negative values to -1. The dataset is over 2/3 negative, and the I set the weights to compensate for this imbalance.
+  p When tested using the
+    a(href="http://ai.stanford.edu/~amaas/data/sentiment/")  Large Movie Review Dataset
+    | with these weights, we actually get a
+    em  70.992%
+    |  success rate for positive classification (sum > 0) and a
+    em  70.24%
+    |  success rate for negative classification (sum < 0).
+  h3 How do the sources rank?
+  p Well, placed under the same metrics,
+  .rank-table
+    table
+      thead
+        tr
+          th Source
+          th Net Sum
+      tbody
+        each source in sources
+          tr
+            td= source.name
+            td= source.sum
+  p This has to do with the type of news reported, obviously. But, still, with a margin that wide, one has to wonder if HuffPo runs each of their articles through a sentiment analyser prior to publishing to scan for bad vibes.
+  p Once I have a more sophisticated and trained dataset, I'd like to keep track of these movements over time, to see how change in season, fiscal quarter, and in general quarterly observed cycles affect the mood of the news.
