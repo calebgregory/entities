@@ -20,17 +20,28 @@ def doesThisAlreadyExist(articleUrl):
         print 'failed in first layer of doesThisAlreadyExist'
         print str(e)
 
+def sendValToNewDb(val):
+    try:
+        c2.execute("""
+            INSERT INTO linkswithsentiment(created,url,value)
+            VALUES ('%s', '%s', '%s');
+                """ % (str(val[0]), str(val[1]), str(val[2])))
+        conn2.commit()
+    except Exception, e:
+        print 'failed in first layer of sendValToNewDb'
+        print str(e)
+
 def getSentimentsValsForArticle():
     try:
         c.execute("""
-            SELECT VL.created, VL.url, SUM(SV.value)
-            FROM visitedlinks AS VL
-            INNER JOIN associations AS A
-            ON A.linkid = VL.linkID
-            INNER JOIN sentimentval AS SV
-            ON SV.word = A.word
-            GROUP BY SV.value, VL.url, VL.created
-            ORDER BY VL.created ASC, SV.value;
+        SELECT VL.created, VL.url, SUM(SV.value)
+        FROM visitedlinks AS VL
+        INNER JOIN associations AS A
+        ON A.linkid = VL.linkid
+        INNER JOIN sentimentval AS SV
+        ON SV.word = A.word
+        GROUP BY VL.url, VL.created
+        ORDER BY VL.created desc;
                 """)
         sent_vals = c.fetchall()
         for val in sent_vals:
@@ -43,21 +54,23 @@ def getSentimentsValsForArticle():
         print 'failed in first layer of getSentimentsValsForArticle'
         print str(e)
 
-def sendValToNewDb(val):
+def insertIntoSentimentBySourceDB(source, atTime):
     try:
+        average = source[2] / source[3] # value / number of articles per source
         c2.execute("""
-            INSERT INTO linkswithsentiment(created,url,value)
-            VALUES ('%s', '%s', '%s');
-                """ % (str(val[0]), str(val[1]), str(val[2])))
+            INSERT INTO sentimentbysource(created, sourceid, name, average)
+            VALUES ('%s', '%s', '%s', '%s');
+        """ % (atTime, str(source[0]), str(source[1]), str(average)))
         conn2.commit()
+
     except Exception, e:
-        print 'failed in first layer of sendValToNewDb'
+        print 'failed in first layer of insertIntoSentimentBySourceDB'
         print str(e)
 
 def getSentimentValsByNewsSource():
     try:
         c.execute("""
-            SELECT S.sourceid, S.name, SUM(SV.value)
+            SELECT S.sourceid, S.name, SUM(SV.value), COUNT(vl.linkid)
             FROM sources AS S
             INNER JOIN visitedLinks as VL
             ON VL.sourceid = S.sourceid
@@ -65,8 +78,8 @@ def getSentimentValsByNewsSource():
             ON A.linkid = VL.linkid
             INNER JOIN sentimentval AS SV
             ON SV.word = A.word
-            GROUP BY SV.value, S.sourceid, S.name
-            ORDER BY S.sourceid;
+            GROUP BY S.sourceid, S.name
+            ORDER BY SUM(SV.value) DESC;
                 """)
         sources_with_val = c.fetchall()
         currentTime = time.time()
@@ -77,22 +90,11 @@ def getSentimentValsByNewsSource():
         print 'failed in first layer of getSentimentsValsByNewsSource'
         print str(e)
 
-def insertIntoSentimentBySourceDB(source, atTime):
-    try:
-        c2.execute("""
-            INSERT INTO sentimentbysource(created, sourceid, name, value)
-            VALUES ('%s', '%s', '%s', '%s');
-        """ % (atTime, str(source[0]), str(source[1]), str(source[2])))
-        conn2.commit()
-
-    except Exception, e:
-        print 'failed in first layer of insertIntoSentimentBySourceDB'
-        print str(e)
-
 conn2 = psycopg2.connect(postgres2)
 c2 = conn2.cursor()
 
 c2.execute("""CREATE TABLE IF NOT EXISTS linkswithsentiment (created timestamp, url TEXT, value REAL);""")
+c2.execute("""CREATE TABLE IF NOT EXISTS sentimentbysource (created timestamp, sourceid INT, name varchar(40), average REAL);""")
 
 conn2.commit()
 conn2.close()
@@ -110,7 +112,7 @@ while (1 < 2):
     c2 = conn2.cursor()
 
     getSentimentsValsForArticle()
-    # getSentimentValsByNewsSource()
+    getSentimentValsByNewsSource()
 
     conn.close()
     conn2.close()
