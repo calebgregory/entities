@@ -23,9 +23,9 @@ def doesThisAlreadyExist(articleUrl):
 def sendValToNewDb(val):
     try:
         c2.execute("""
-            INSERT INTO linkswithsentiment(created,url,value)
-            VALUES ('%s', '%s', '%s');
-                """ % (str(val[0]), str(val[1]), str(val[2])))
+            INSERT INTO linkswithsentiment(created,url,value,sourcename)
+            VALUES ('%s', '%s', '%s', '%s');
+                """ % (str(val[0]), str(val[1]), str(val[2]), str(val[3])))
         conn2.commit()
     except Exception, e:
         print 'failed in first layer of sendValToNewDb'
@@ -34,14 +34,16 @@ def sendValToNewDb(val):
 def getSentimentsValsForArticle():
     try:
         c.execute("""
-        SELECT VL.created, VL.url, SUM(SV.value)
+        SELECT VL.created, VL.url, SUM(SV.value), S.name
         FROM visitedlinks AS VL
         INNER JOIN associations AS A
         ON A.linkid = VL.linkid
         INNER JOIN sentimentval AS SV
         ON SV.word = A.word
-        GROUP BY VL.url, VL.created
-        ORDER BY VL.created desc;
+        INNER JOIN sources AS S
+        ON S.sourceid = VL.sourceid
+        GROUP BY VL.url, VL.created, S.name
+        ORDER BY VL.created DESC;
                 """)
         sent_vals = c.fetchall()
         for val in sent_vals:
@@ -93,7 +95,7 @@ def getSentimentValsByNewsSource():
 conn2 = psycopg2.connect(postgres2)
 c2 = conn2.cursor()
 
-c2.execute("""CREATE TABLE IF NOT EXISTS linkswithsentiment (created timestamp, url TEXT, value REAL);""")
+c2.execute("""CREATE TABLE IF NOT EXISTS linkswithsentiment (created timestamp, url TEXT, value REAL, sourcename varchar(40));""")
 c2.execute("""CREATE TABLE IF NOT EXISTS sentimentbysource (created timestamp, sourceid INT, name varchar(40), average REAL);""")
 
 conn2.commit()
