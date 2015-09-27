@@ -3,7 +3,7 @@
 var pg = require('pg');
 var conString = process.env.API_DB_URL || 'postgres://localhost/testdb2';
 
-export function getValuatedArticles(newsSource, pageNumber, cb) {
+export function getValuatedArticles(newsSource, pageNumber, mood, cb) {
 
   pg.connect(conString, (err,client,done) => {
 
@@ -16,7 +16,11 @@ export function getValuatedArticles(newsSource, pageNumber, cb) {
 
     // select 'positive' news stories, 5 at a time, starting at the page_number * 5
     // then send to controller
-    client.query("SELECT * FROM linkswithsentiment WHERE sourcename = $1 AND value > 0 ORDER BY created DESC LIMIT $2 OFFSET $3;",
+    var queryString =
+      mood === 'posi' ?
+      "SELECT * FROM linkswithsentiment WHERE sourcename = $1 AND value > 0 ORDER BY created DESC LIMIT $2 OFFSET $3;" :
+      "SELECT * FROM linkswithsentiment WHERE sourcename = $1 AND value < 0 ORDER BY created DESC LIMIT $2 OFFSET $3;";
+    client.query(queryString,
                  [newsSource.toString(), numberPerPage.toString(), start.toString()],
                  (err, result) => {
 

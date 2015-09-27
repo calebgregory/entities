@@ -22,8 +22,9 @@ export function page(io) {
 
     var pageNumber = req.params.page;
     var newsSource = newsSourceMap[req.params.source];
+    var mood = req.params.mood;
 
-    Articles.getValuatedArticles(newsSource, pageNumber, (err, articles) => {
+    Articles.getValuatedArticles(newsSource, pageNumber, mood, (err, articles) => {
       if(err) console.log(err);
 
       messenger.getText(articles, (err, data) => {
@@ -34,7 +35,8 @@ export function page(io) {
       res.render('news/index',
                  { source : newsSource,
                    reqsrc : req.params.source,
-                   page : pageNumber });
+                   page : pageNumber,
+                   mood : mood });
     });
   };
 }
