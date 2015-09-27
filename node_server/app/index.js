@@ -9,7 +9,7 @@ var express   = require('express')
 
 var routes  = require('./routes');
 
-require('../lib/secrets');
+require('../lib/secrets').config();
 
 var app = module.exports = express();
 
