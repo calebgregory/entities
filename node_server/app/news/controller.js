@@ -21,13 +21,10 @@ export function page(io) {
   return function(req,res) {
 
     var pageNumber = req.params.page;
-
     var newsSource = newsSourceMap[req.params.source];
 
     Articles.getValuatedArticles(newsSource, pageNumber, (err, articles) => {
       if(err) console.log(err);
-
-      console.log('made it into controller')
 
       messenger.getText(articles, (err, data) => {
         if(err) console.log(err);
