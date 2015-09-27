@@ -237,11 +237,7 @@ while 1 < 2:
     currentTime = time.time()
     dateStamp = datetime.datetime.fromtimestamp(currentTime).strftime('%Y-%m-%d %H:%M:%S')
     print dateStamp, 'Huffington Post'
-<<<<<<< Updated upstream
     time.sleep(180)
-=======
-    time.sleep(3)
->>>>>>> Stashed changes
 
     conn.close()
 
@@ -252,11 +248,7 @@ while 1 < 2:
     currentTime = time.time()
     dateStamp = datetime.datetime.fromtimestamp(currentTime).strftime('%Y-%m-%d %H:%M:%S')
     print dateStamp, 'New York Times'
-<<<<<<< Updated upstream
     time.sleep(180)
-=======
-    time.sleep(3)
->>>>>>> Stashed changes
 
     conn.close()
 
@@ -267,11 +259,7 @@ while 1 < 2:
     currentTime = time.time()
     dateStamp = datetime.datetime.fromtimestamp(currentTime).strftime('%Y-%m-%d %H:%M:%S')
     print dateStamp, 'Fox News'
-<<<<<<< Updated upstream
     time.sleep(180)
-=======
-    time.sleep(3)
->>>>>>> Stashed changes
 
     conn.close()
 
@@ -282,11 +270,7 @@ while 1 < 2:
     currentTime = time.time()
     dateStamp = datetime.datetime.fromtimestamp(currentTime).strftime('%Y-%m-%d %H:%M:%S')
     print dateStamp, 'NPR'
-<<<<<<< Updated upstream
     time.sleep(180)
-=======
-    time.sleep(3)
->>>>>>> Stashed changes
 
     conn.close()
 
@@ -297,11 +281,7 @@ while 1 < 2:
     currentTime = time.time()
     dateStamp = datetime.datetime.fromtimestamp(currentTime).strftime('%Y-%m-%d %H:%M:%S')
     print dateStamp, 'CNN'
-<<<<<<< Updated upstream
     time.sleep(180)
-=======
-    time.sleep(3)
->>>>>>> Stashed changes
 
     conn.close()
 
@@ -312,10 +292,6 @@ while 1 < 2:
     currentTime = time.time()
     dateStamp = datetime.datetime.fromtimestamp(currentTime).strftime('%Y-%m-%d %H:%M:%S')
     print dateStamp, 'Al Jazeera'
-<<<<<<< Updated upstream
     time.sleep(180)
-=======
-    time.sleep(3)
->>>>>>> Stashed changes
 
     conn.close()
