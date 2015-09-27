@@ -7,9 +7,9 @@ var express   = require('express')
   , path      = require('path')
   , socketio  = require('socket.io');
 
-var routes  = require('./routes');
-
 require('../lib/secrets').config();
+
+var routes  = require('./routes');
 
 var app = module.exports = express();
 

@@ -32,3 +32,4 @@ venv
 .Python
 */www/lib
 z_scraps
+*/lib/secrets.js
