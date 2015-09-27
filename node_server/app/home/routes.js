@@ -6,5 +6,6 @@ var express = require('express')
 var ctrl = require('./controller');
 
 router.get('/', ctrl.index);
+router.get('/sourcedata', ctrl.sourceData);
 
 module.exports = router;

@@ -12,7 +12,7 @@ export function getValuatedSources(cb) {
     }
 
     client.query(
-      'SELECT * FROM sentimentbysource ORDER BY created ASC LIMIT 6;',
+      'SELECT * FROM sentimentbysource ORDER BY created ASC;',
       [],
       (err,result) => {
         if(err) return console.error('error running query', err);
