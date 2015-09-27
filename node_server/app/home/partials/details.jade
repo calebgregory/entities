@@ -20,11 +20,10 @@
       thead
         tr
           th Source
-          th Net Sum
+          th Avg. Sentiment / Article
       tbody
         each source in sources
           tr
             td= source.name
-            td= source.sum
-  p This has to do with the type of news reported, obviously. But, still, with a margin that wide, one has to wonder if HuffPo runs each of their articles through a sentiment analyser prior to publishing to scan for bad vibes.
+            td= (source.sum / source.count).toPrecision(3)
   p Once I have a more sophisticated and trained dataset, I'd like to keep track of these movements over time, to see how change in season, fiscal quarter, and in general quarterly observed cycles affect the mood of the news.

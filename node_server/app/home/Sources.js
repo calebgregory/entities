@@ -12,7 +12,7 @@ export function getValuatedSources(cb) {
     }
 
     client.query(
-      'SELECT  S.sourceid, S.name, SUM(sv.value) '+
+      'SELECT  S.sourceid, S.name, SUM(sv.value), COUNT(vl.linkid) '+
       'FROM sources AS S '+
       'INNER JOIN visitedLinks AS VL '+
       'ON VL.sourceid = S.sourceid '+
@@ -21,7 +21,7 @@ export function getValuatedSources(cb) {
       'INNER JOIN sentimentval AS SV '+
       'ON SV.word = A.word '+
       'GROUP BY S.sourceid, S.name '+
-      'ORDER BY S.sourceid;',
+      'ORDER BY SUM(SV.value) DESC;',
       [],
       (err,result) => {
         if(err) return console.error('error running query', err);
