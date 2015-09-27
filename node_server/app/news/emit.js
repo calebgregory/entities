@@ -2,6 +2,8 @@
 
 export function gimme(io, data) {
 
-  io.sockets.emit('news', data.result);
+  setTimeout(() => {
+    io.sockets.emit('news', data.result);
+  }, 250);
 
 }

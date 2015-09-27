@@ -4,8 +4,6 @@ var celery = require('node-celery');
 
 export function getText(articles, cb) {
 
-  console.log('made it into messenger');
-
   var articles = articles.map(article => {
     return {
       url : article.url,
@@ -23,15 +21,18 @@ export function getText(articles, cb) {
     console.log(err);
   })
 
+  var result = {};
+
   client.on('connect', () => {
 
-    console.log ('made it into celery')
-
-    articles.forEach(article => {
-      var result = client.call('framework.tasks.visit', [article.url, article.sentimentValue]);
+    articles.forEach((article, i) => {
+      if (Object.keys(result).length > 5) return;
 
       setTimeout(() => {
-        result.on('ready', data => {
+        result[i] = client.call('framework.tasks.visit',
+                                [article.url, article.sentimentValue]);
+
+        result[i].on('ready', data => {
           cb(null, data);
         });
       }, 250);

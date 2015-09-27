@@ -1,13 +1,20 @@
 var socket = io();
 
 var articles = document.getElementsByClassName('articles')[0];
+var pending = document.getElementsByClassName('pending')[0];
 
 socket.on('connect', obj => {
   console.log('>> hello, you are connected on',socket.id);
 })
 
 socket.on('news', msg => {
+  pending.classList.add('hidden');
   msg = JSON.parse(msg);
+  console.log('got the result',msg)
+  addToPage(msg);
+});
+
+function addToPage(msg) {
 
   var box = document.createElement('DIV');
   box.classList.add('box');
@@ -47,11 +54,4 @@ socket.on('news', msg => {
 
   box.appendChild(article);
   articles.appendChild(box);
-});
-
-function generateHeadline(msg) {
-  //var newDiv = $('.articles').append($('div'));
-  //newDiv.addClass('article');
-  //var newHeadline = newDiv.append($('h2'));
-  //newHeadline.addClass('headline').text(msg.headline);
 }
